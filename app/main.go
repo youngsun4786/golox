@@ -43,7 +43,7 @@ func main() {
 		case LEFT_PAREN:
 			fmt.Println("LEFT_PAREN ( null")
 		case RIGHT_PAREN:
-			fmt.Println("RIGHT_PARENT ) null")
+			fmt.Println("RIGHT_PAREN ) null")
 		}
 	}
 	fmt.Println("EOF  null")
