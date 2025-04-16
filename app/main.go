@@ -44,7 +44,6 @@ func main() {
 			fmt.Println("LEFT_PAREN ( null")
 		case RIGHT_PAREN:
 			fmt.Println("RIGHT_PARENT ) null")
-		default: 
 		}
 	}
 	fmt.Println("EOF  null")
