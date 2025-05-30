@@ -1,7 +1,7 @@
 package lexer
 
 import (
-	"github.com/youngsun4786/golox/token"
+	"github.com/codecrafters-io/interpreter-starter-go/token"
 )
 
 type Lexer struct {
@@ -14,7 +14,7 @@ type Lexer struct {
 }
 
 
-func NewLexer(source string, filename string) *Lexer {
+func New(source string, filename string) *Lexer {
 	return &Lexer {
 		source: source,
 		filename: filename,
@@ -61,7 +61,25 @@ func (l *Lexer) skipWhitespace() {
 }
 
 func (l *Lexer) NextToken() token.Token {
-	return nil
+	l.skipWhitespace()
+	l.start = l.current
+	if l.isAtEnd() {
+		return token.New(token.EOF, "", "", l.line, l.column)
+	}
+
+	ch := l.advance()
+	switch ch {
+		case '(': 
+			return token.New(token.LPAREN, "(", "", l.line, l.column)
+		case ')':
+			return token.New(token.RPAREN, ")", "", l.line, l.column)
+		case '{': 
+			return token.New(token.LBRACE, "{", "", l.line, l.column)
+		case '}':
+			return token.New(token.RBRACE, "}", "", l.line, l.column)
+		default:
+			return token.New(token.ERROR, string(ch), "", l.line, l.column)	
+	}
 }
 
 
