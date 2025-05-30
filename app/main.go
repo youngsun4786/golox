@@ -3,6 +3,7 @@ package main
 import (
 	"fmt"
 	"os"
+	"github.com/youngsun4786/golox/lexer"
 )
 
 
@@ -12,9 +13,6 @@ const (
 )
 
 func main() {
-	// You can use print statements as follows for debugging, they'll be visible when running tests.
-	fmt.Fprintln(os.Stderr, "Logs from your program will appear here!")
-
 	if len(os.Args) < 3 {
 		fmt.Fprintln(os.Stderr, "Usage: ./your_program.sh tokenize <filename>")
 		os.Exit(1)
@@ -31,6 +29,11 @@ func main() {
 	
 	filename := os.Args[2]
 	rawFileContents, err := os.ReadFile(filename)
+
+	for _, word := range rawFileContents {
+		fmt.Printf("type of content %T\n", word)
+	}
+
 	if err != nil {
 		fmt.Fprintf(os.Stderr, "Error reading file: %v\n", err)
 		os.Exit(1)
