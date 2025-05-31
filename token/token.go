@@ -34,6 +34,13 @@ const (
 	RPAREN = ")"
 	LBRACE = "{"
 	RBRACE = "}"
+	COMMA = ","
+	DOT = "."
+	MINUS = "-"
+	PLUS = "+"
+	SEMICOLON = ";"
+	SLASH = "/"
+	STAR = "*"
 	ERROR = "ERROR"
 	EOF = "EOF"
 )
@@ -60,8 +67,23 @@ func (t*Token) TokenToStr() string {
 			return "LEFT_BRACE"
 		case RBRACE: 
 			return "RIGHT_BRACE"
+		case COMMA: 
+			return "COMMA"
+		case DOT: 
+			return "DOT"
+		case MINUS:	
+			return "MINUS"
+		case PLUS: 
+			return "PLUS"
+		case SEMICOLON: 
+			return "SEMICOLON"
+		case SLASH: 
+			return "SLASH"
+		case STAR: 
+			return "STAR"
 		case EOF:
 			return "EOF"
+		
 		default:
 			return ""
 	}

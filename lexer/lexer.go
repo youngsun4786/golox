@@ -77,6 +77,20 @@ func (l *Lexer) NextToken() token.Token {
 			return token.New(token.LBRACE, "{", "", l.line, l.column)
 		case '}':
 			return token.New(token.RBRACE, "}", "", l.line, l.column)
+		case ',':
+			return token.New(token.COMMA, ",", "", l.line, l.column)
+		case '.': 
+			return token.New(token.DOT, ".", "", l.line, l.column)
+		case '-': 
+			return token.New(token.MINUS, "-", "", l.line, l.column)
+		case '+': 
+			return token.New(token.PLUS, "+", "", l.line, l.column)
+		case ';': 
+			return token.New(token.SEMICOLON, ";", "", l.line, l.column)
+		case '/': 
+			return token.New(token.SLASH, "/", "", l.line, l.column)
+		case '*':
+			return token.New(token.STAR, "*", "", l.line, l.column)
 		default:
 			return token.New(token.ERROR, string(ch), "", l.line, l.column)	
 	}
