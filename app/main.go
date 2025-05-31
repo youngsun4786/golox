@@ -37,7 +37,7 @@ func main() {
 	for { 
 		tok := l.NextToken()
 		if tok.Type == token.ERROR {
-			fmt.Fprintf(os.Stderr, "[line %v] Error: Unexpected character %s\n", tok.Position.Line, tok.Lexeme)
+			fmt.Fprintf(os.Stderr, "[line %v] Error: Unexpected character: %s\n", tok.Position.Line, tok.Lexeme)
 			hasLexicalErrors = true
 			continue
 		}
