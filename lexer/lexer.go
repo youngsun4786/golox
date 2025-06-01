@@ -72,7 +72,7 @@ func (l *Lexer) NextToken() token.Token {
 	// comments
 	if ch == '/' && l.peek() == '/' {
 		ch = l.advance()
-		for ch != '\n' {
+		for !l.isAtEnd() && ch != '\n' {
 			l.advance()
 			ch = l.peek()
 		}
