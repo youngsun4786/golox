@@ -104,6 +104,18 @@ func (l *Lexer) NextToken() token.Token {
 			}
 			return token.New(token.NOT, "!", "", l.line, l.column)
 			
+		case '>':
+			if l.peek() == '=' {
+				l.advance()
+				return token.New(token.GE, ">=", "", l.line, l.column)
+			}
+			return token.New(token.GT, ">", "", l.line, l.column)
+		case '<':
+			if l.peek() == '=' {
+				l.advance()
+				return token.New(token.LE, "<=", "", l.line, l.column)
+			}
+			return token.New(token.LT, "<", "", l.line, l.column)
 		default:
 			return token.New(token.ERROR, string(ch), "", l.line, l.column)	
 	}

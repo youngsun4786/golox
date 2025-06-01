@@ -46,6 +46,10 @@ const (
 	NOT = "!"
 	EQ = "=="
 	NE = "!="
+	GT = ">"
+	GE = ">="
+	LT = "<"
+	LE = "<="
 	ERROR = "ERROR"
 	EOF = "EOF"
 )
@@ -94,6 +98,14 @@ func (t*Token) TokenToStr() string {
 			return "EQUAL_EQUAL"	
 		case NE:
 			return "BANG_EQUAL"	
+		case GT:
+			return "GREATER"	
+		case GE:
+			return "GREATER_EQUAL"	
+		case LT:
+			return "LESS"	
+		case LE:
+			return "LESS_EQUAL"	
 		case EOF:
 			return "EOF"
 		
