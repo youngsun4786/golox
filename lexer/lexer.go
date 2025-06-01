@@ -68,6 +68,17 @@ func (l *Lexer) NextToken() token.Token {
 	}
 
 	ch := l.advance()
+
+	// comments
+	if ch == '/' && l.peek() == '/' {
+		ch = l.advance()
+		for ch != '\n' {
+			l.advance()
+			ch = l.peek()
+		}
+		return l.NextToken()
+	}
+
 	switch ch {
 		case '(': 
 			return token.New(token.LPAREN, "(", "", l.line, l.column)
@@ -84,11 +95,11 @@ func (l *Lexer) NextToken() token.Token {
 		case '-': 
 			return token.New(token.MINUS, "-", "", l.line, l.column)
 		case '+': 
-			return token.New(token.PLUS, "+", "", l.line, l.column)
+	return token.New(token.PLUS, "+", "", l.line, l.column)
 		case ';': 
 			return token.New(token.SEMICOLON, ";", "", l.line, l.column)
 		case '/': 
-			return token.New(token.SLASH, "/", "", l.line, l.column)
+			return token.New(token.DIV, "/", "", l.line, l.column)
 		case '*':
 			return token.New(token.STAR, "*", "", l.line, l.column)
 		case '=':

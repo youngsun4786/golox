@@ -39,7 +39,7 @@ const (
 	MINUS = "-"
 	PLUS = "+"
 	SEMICOLON = ";"
-	SLASH = "/"
+	DIV = "/"
 	STAR = "*"
 	// OPERATORS
 	ASSIGN = "="
@@ -86,7 +86,7 @@ func (t*Token) TokenToStr() string {
 			return "PLUS"
 		case SEMICOLON: 
 			return "SEMICOLON"
-		case SLASH: 
+		case DIV: 
 			return "SLASH"
 		case STAR: 
 			return "STAR"
