@@ -41,6 +41,9 @@ const (
 	SEMICOLON = ";"
 	SLASH = "/"
 	STAR = "*"
+	// OPERATORS
+	ASSIGN = "="
+	EQ = "=="
 	ERROR = "ERROR"
 	EOF = "EOF"
 )
@@ -81,6 +84,10 @@ func (t*Token) TokenToStr() string {
 			return "SLASH"
 		case STAR: 
 			return "STAR"
+		case ASSIGN:
+			return "EQUAL"
+		case EQ:
+			return "EQUAL_EQUAL"	
 		case EOF:
 			return "EOF"
 		

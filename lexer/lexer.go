@@ -91,6 +91,12 @@ func (l *Lexer) NextToken() token.Token {
 			return token.New(token.SLASH, "/", "", l.line, l.column)
 		case '*':
 			return token.New(token.STAR, "*", "", l.line, l.column)
+		case '=':
+			if l.peek() == '=' {
+				l.advance()
+				return token.New(token.EQ, "==", "", l.line, l.column)
+			}
+			return token.New(token.ASSIGN, "=", "", l.line, l.column)
 		default:
 			return token.New(token.ERROR, string(ch), "", l.line, l.column)	
 	}
