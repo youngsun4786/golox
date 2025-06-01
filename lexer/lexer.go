@@ -97,6 +97,13 @@ func (l *Lexer) NextToken() token.Token {
 				return token.New(token.EQ, "==", "", l.line, l.column)
 			}
 			return token.New(token.ASSIGN, "=", "", l.line, l.column)
+		case '!':
+			if l.peek() == '=' {
+				l.advance()
+				return token.New(token.NE, "!=", "", l.line, l.column)
+			}
+			return token.New(token.NOT, "!", "", l.line, l.column)
+			
 		default:
 			return token.New(token.ERROR, string(ch), "", l.line, l.column)	
 	}

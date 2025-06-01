@@ -43,7 +43,9 @@ const (
 	STAR = "*"
 	// OPERATORS
 	ASSIGN = "="
+	NOT = "!"
 	EQ = "=="
+	NE = "!="
 	ERROR = "ERROR"
 	EOF = "EOF"
 )
@@ -86,8 +88,12 @@ func (t*Token) TokenToStr() string {
 			return "STAR"
 		case ASSIGN:
 			return "EQUAL"
+		case NOT:
+			return "BANG"	
 		case EQ:
 			return "EQUAL_EQUAL"	
+		case NE:
+			return "BANG_EQUAL"	
 		case EOF:
 			return "EOF"
 		
