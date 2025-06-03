@@ -30,7 +30,8 @@ func New(typ TokenType, lexeme, literal string, line, col uint32) Token {
 }
 
 const (
-	LPAREN TokenType = "("
+	STR_LITERAL TokenType = "STR_LITERAL"
+	LPAREN = "("
 	RPAREN = ")"
 	LBRACE = "{"
 	RBRACE = "}"
@@ -68,6 +69,9 @@ func LookUpIdent(ident string) (TokenType, error) {
 
 func (t*Token) TokenToStr() string {
 	switch t.Type {
+		case STR_LITERAL:
+			return "STRING"
+
 		case LPAREN: 
 			return "LEFT_PAREN"
 		case RPAREN: 
@@ -107,8 +111,7 @@ func (t*Token) TokenToStr() string {
 		case LE:
 			return "LESS_EQUAL"	
 		case EOF:
-			return "EOF"
-		
+			return "EOF"	
 		default:
 			return ""
 	}
@@ -119,6 +122,8 @@ func (t* Token) String() string {
 	var literal string
 	if t.Literal == "" {
 		literal = "null"
+	} else {
+		literal = t.Literal
 	}
 
 	return fmt.Sprintf("%s %s %s", t.TokenToStr(), t.Lexeme, literal)
