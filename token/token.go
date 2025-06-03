@@ -7,7 +7,7 @@ type TokenType string
 type Token struct {
 	Type TokenType
 	Lexeme string
-	Literal string
+	Literal interface{}
 	Position Position
 }
 
@@ -20,7 +20,7 @@ func (p *Position) String() string {
 	return fmt.Sprintf("%d:%d", p.Line, p.Col)
 }
 
-func New(typ TokenType, lexeme, literal string, line, col uint32) Token {
+func New(typ TokenType, lexeme string, literal interface{}, line, col uint32) Token {
 	return Token {
 		Type: typ,
 		Lexeme: lexeme,
@@ -31,6 +31,7 @@ func New(typ TokenType, lexeme, literal string, line, col uint32) Token {
 
 const (
 	STR_LITERAL TokenType = "STR_LITERAL"
+	NUM_LITERAL = "NUM_LITERAL"
 	LPAREN = "("
 	RPAREN = ")"
 	LBRACE = "{"
@@ -71,7 +72,8 @@ func (t*Token) TokenToStr() string {
 	switch t.Type {
 		case STR_LITERAL:
 			return "STRING"
-
+		case NUM_LITERAL:
+			return "NUMBER"
 		case LPAREN: 
 			return "LEFT_PAREN"
 		case RPAREN: 
@@ -117,15 +119,26 @@ func (t*Token) TokenToStr() string {
 	}
 }
 
+func formatFloat(f float64) string {
+    // Check if it's a whole number
+	if f == float64(int64(f)) {
+		return fmt.Sprintf("%.1f", f) 
+	}
+	// Normal formatting for non-whole numbers
+	return fmt.Sprintf("%g", f) 
+}
+
 
 func (t* Token) String() string {
-	var literal string
 	if t.Literal == "" {
-		literal = "null"
-	} else {
-		literal = t.Literal
+		t.Literal = "null"
 	}
 
-	return fmt.Sprintf("%s %s %s", t.TokenToStr(), t.Lexeme, literal)
+	    // Handle float64 specially to preserve precision
+	if f, ok := t.Literal.(float64); ok {
+		return fmt.Sprintf("%s %s %s", t.Type, t.Lexeme, formatFloat(f))		
+	}
+
+	return fmt.Sprintf("%s %s %v", t.TokenToStr(), t.Lexeme, t.Literal)
 //	return fmt.Sprintf("%s %s %s at %d:%d", t.Type, t.Lexeme, t.Literal, t.Position.Line, t.Position.Col)
 }

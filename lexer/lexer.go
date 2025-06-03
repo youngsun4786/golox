@@ -3,6 +3,7 @@ package lexer
 import (
 	"github.com/codecrafters-io/interpreter-starter-go/token"
 	"fmt"
+	"strconv"
 )
 
 type Lexer struct {
@@ -43,6 +44,13 @@ func (l *Lexer) peek() rune {
 	return rune(l.source[l.current])
 }
 
+func (l *Lexer) peekNext() rune {
+	if l.current + 1 >= len(l.source) {
+		return '0'
+	}
+	return rune(l.source[l.current + 1])
+}
+
 func (l *Lexer) resetCursor() {
 	l.line++
 	l.column = 1
@@ -59,13 +67,17 @@ func (l *Lexer) skipWhitespace() {
 
 }
 
+func (l *Lexer) isDigit(c rune) bool {
+	return c >= '0' && c <='9'
+}
+
 func (l* Lexer) tokenizeString() (token.Token, error) {
 	for l.peek() != '"' && !l.IsAtEnd() {
 		l.advance()
 	}
 
 	if l.IsAtEnd() {	
-		return  token.New(token.EOF, "", "", l.line, l.column), fmt.Errorf("[line %v] Error: Unterminated string.\n", l.line)
+		return token.New(token.EOF, "", "", l.line, l.column), fmt.Errorf("[line %v] Error: Unterminated string.\n", l.line)
 	}
 
 	l.advance()
@@ -73,6 +85,30 @@ func (l* Lexer) tokenizeString() (token.Token, error) {
 	literal := string(l.source[l.start + 1: l.current - 1])
 	return token.New(token.STR_LITERAL, fmt.Sprintf("\"%s\"", literal), literal, l.line, l.column), nil
 }
+
+func (l* Lexer) tokenizeNumber() (token.Token, error) {
+	for l.isDigit(l.peek()) {
+		l.advance()
+	}
+
+	// look for any fractional part
+	if l.peek() == '.' && l.isDigit(l.peekNext()) {
+		// consume '.'
+		l.advance()
+		for l.isDigit(l.peek()) {
+			l.advance()
+		}
+	}
+
+	number := string(l.source[l.start: l.current])
+	// convert into float before passing it as literal
+	f, err := strconv.ParseFloat(number, 64)
+	if err != nil {
+		return token.New(token.ERROR, "", "", l.line, l.column), err
+	}
+	return token.New(token.NUM_LITERAL, number , f, l.line, l.column), nil
+}
+
 
 func (l *Lexer) NextToken() (token.Token, error) {
 	l.skipWhitespace()
@@ -86,7 +122,7 @@ func (l *Lexer) NextToken() (token.Token, error) {
 	switch ch {
 		// LITERALS
 		case '"':
-			return l.tokenizeString()
+			return l.tokenizeString()	
 		case '(': 
 			return token.New(token.LPAREN, "(", "", l.line, l.column), nil
 		case ')':
@@ -143,6 +179,9 @@ func (l *Lexer) NextToken() (token.Token, error) {
 			}
 			return token.New(token.LT, "<", "", l.line, l.column), nil
 		default:
+			if l.isDigit(ch) {
+				return l.tokenizeNumber()
+			}
 			return token.New(token.ERROR, string(ch), "", l.line, l.column), fmt.Errorf("[line %v] Error: Unexpected character: %s\n", l.line, string(ch))
 	}
 }
