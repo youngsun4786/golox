@@ -30,8 +30,28 @@ func New(typ TokenType, lexeme string, literal interface{}, line, col uint32) To
 }
 
 const (
+	// LITERALS
 	STR_LITERAL TokenType = "STR_LITERAL"
 	NUM_LITERAL = "NUM_LITERAL"
+	// IDENTIFERS & KEYWORDS
+	IDENTIFIER = "IDENTIFIER"
+	AND = "AND"
+	CLASS = "CLASS"
+	ELSE = "ELSE"
+	FALSE = "FALSE"
+	FOR = "FOR"
+	FUN = "FUN"
+	IF = "IF"
+	NIL = "NIL"
+	OR = "OR"
+	PRINT = "PRINT"
+	RETURN = "RETURN"
+	SUPER = "SUPER"
+	THIS = "THIS"
+	TRUE = "TRUE"
+	VAR = "VAR"
+	WHILE = "WHILE"
+
 	LPAREN = "("
 	RPAREN = ")"
 	LBRACE = "{"
@@ -57,15 +77,32 @@ const (
 )
 
 
-var keywords = map[string]TokenType{}
+var keywords = map[string]TokenType{
+	"and" : AND,
+	"class": CLASS,
+	"else": ELSE,
+	"false": FALSE,
+	"for": FOR,
+	"fun": FUN,
+	"if": IF,
+	"nil": NIL,
+	"or": OR,
+	"print": PRINT,
+	"return": RETURN,
+	"super": SUPER,
+	"this": THIS,
+	"true": TRUE,
+	"var": VAR,
+	"while": WHILE,
+}
 
 
 
-func LookUpIdent(ident string) (TokenType, error) {
+func LookUpIdent(ident string) (TokenType) {
 	if tok, ok := keywords[ident]; ok {
-		return tok, nil
+		return tok
 	}
-	return ERROR, fmt.Errorf(("LookupIdent: Could not identify ident. Unexpected\n"))
+	return IDENTIFIER
 }
 
 func (t*Token) TokenToStr() string {
@@ -74,6 +111,8 @@ func (t*Token) TokenToStr() string {
 			return "STRING"
 		case NUM_LITERAL:
 			return "NUMBER"
+		case IDENTIFIER:
+			return "IDENTIFIER"
 		case LPAREN: 
 			return "LEFT_PAREN"
 		case RPAREN: 

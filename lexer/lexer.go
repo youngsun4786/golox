@@ -67,8 +67,20 @@ func (l *Lexer) skipWhitespace() {
 
 }
 
-func (l *Lexer) isDigit(c rune) bool {
-	return c >= '0' && c <='9'
+func (l *Lexer) isAlpha(c rune) bool {
+	return (c >= 'a' && c <= 'z') || (c >= 'A' && c <= 'Z') || c == '_'
+}
+
+func (l* Lexer) tokenizeIdent() (token.Token, error) {
+	// alpha numeric
+	for l.isAlpha(l.peek()) || l.isDigit(l.peek()) {
+		l.advance()
+	}
+
+	ident := string(l.source[l.start: l.current])
+	keyword := token.LookUpIdent(ident)
+
+	return token.New(keyword, ident , "", l.line, l.column), nil
 }
 
 func (l* Lexer) tokenizeString() (token.Token, error) {
@@ -84,6 +96,10 @@ func (l* Lexer) tokenizeString() (token.Token, error) {
 	// trimming the surrounding quotes
 	literal := string(l.source[l.start + 1: l.current - 1])
 	return token.New(token.STR_LITERAL, fmt.Sprintf("\"%s\"", literal), literal, l.line, l.column), nil
+}
+
+func (l *Lexer) isDigit(c rune) bool {
+	return c >= '0' && c <='9'
 }
 
 func (l* Lexer) tokenizeNumber() (token.Token, error) {
@@ -181,6 +197,10 @@ func (l *Lexer) NextToken() (token.Token, error) {
 		default:
 			if l.isDigit(ch) {
 				return l.tokenizeNumber()
+			}
+
+			if l.isAlpha(ch) {
+				return l.tokenizeIdent()
 			}
 			return token.New(token.ERROR, string(ch), "", l.line, l.column), fmt.Errorf("[line %v] Error: Unexpected character: %s\n", l.line, string(ch))
 	}
