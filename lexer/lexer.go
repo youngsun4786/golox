@@ -3,7 +3,6 @@ package lexer
 import (
 	"github.com/codecrafters-io/interpreter-starter-go/token"
 	"fmt"
-	"os"
 )
 
 type Lexer struct {
@@ -14,7 +13,6 @@ type Lexer struct {
 	line     uint32
 	column   uint32
 }
-
 
 func New(source string, filename string) *Lexer {
 	return &Lexer {
@@ -60,28 +58,27 @@ func (l *Lexer) skipWhitespace() {
 	}
 
 }
-func (l* Lexer) tokenizeString() token.Token {
+
+func (l* Lexer) tokenizeString() (token.Token, error) {
 	for l.peek() != '"' && !l.IsAtEnd() {
 		l.advance()
 	}
 
-	if l.IsAtEnd() {
-		fmt.Fprintf(os.Stderr, "[line %v] Error: Unterminated string.\n", l.line)
-		return token.New(token.EOF, "", "", l.line, l.column)
-
+	if l.IsAtEnd() {	
+		return  token.New(token.EOF, "", "", l.line, l.column), fmt.Errorf("[line %v] Error: Unterminated string.\n", l.line)
 	}
 
 	l.advance()
 	// trimming the surrounding quotes
 	literal := string(l.source[l.start + 1: l.current - 1])
-	return token.New(token.STR_LITERAL, fmt.Sprintf("\"%s\"", literal), literal, l.line, l.column)
+	return token.New(token.STR_LITERAL, fmt.Sprintf("\"%s\"", literal), literal, l.line, l.column), nil
 }
 
-func (l *Lexer) NextToken() token.Token {
+func (l *Lexer) NextToken() (token.Token, error) {
 	l.skipWhitespace()
 	l.start = l.current
 	if l.IsAtEnd() {
-		return token.New(token.EOF, "", "", l.line, l.column)
+		return token.New(token.EOF, "", "", l.line, l.column), nil
 	}
 
 	ch := l.advance()
@@ -91,23 +88,23 @@ func (l *Lexer) NextToken() token.Token {
 		case '"':
 			return l.tokenizeString()
 		case '(': 
-			return token.New(token.LPAREN, "(", "", l.line, l.column)
+			return token.New(token.LPAREN, "(", "", l.line, l.column), nil
 		case ')':
-			return token.New(token.RPAREN, ")", "", l.line, l.column)
+			return token.New(token.RPAREN, ")", "", l.line, l.column), nil
 		case '{': 
-			return token.New(token.LBRACE, "{", "", l.line, l.column)
+			return token.New(token.LBRACE, "{", "", l.line, l.column), nil
 		case '}':
-			return token.New(token.RBRACE, "}", "", l.line, l.column)
+			return token.New(token.RBRACE, "}", "", l.line, l.column), nil
 		case ',':
-			return token.New(token.COMMA, ",", "", l.line, l.column)
+			return token.New(token.COMMA, ",", "", l.line, l.column), nil
 		case '.': 
-			return token.New(token.DOT, ".", "", l.line, l.column)
+			return token.New(token.DOT, ".", "", l.line, l.column), nil
 		case '-': 
-			return token.New(token.MINUS, "-", "", l.line, l.column)
+			return token.New(token.MINUS, "-", "", l.line, l.column), nil
 		case '+': 
-			return token.New(token.PLUS, "+", "", l.line, l.column)	
+			return token.New(token.PLUS, "+", "", l.line, l.column), nil
 		case ';': 
-			return token.New(token.SEMICOLON, ";", "", l.line, l.column)
+			return token.New(token.SEMICOLON, ";", "", l.line, l.column), nil
 		case '/': 
 			// single-line comment
 			if l.peek() == '/' {
@@ -117,35 +114,35 @@ func (l *Lexer) NextToken() token.Token {
 				}
 				return l.NextToken()
 			} 
-			return token.New(token.DIV, "/", "", l.line, l.column)
+			return token.New(token.DIV, "/", "", l.line, l.column), nil
 		case '*':
-			return token.New(token.STAR, "*", "", l.line, l.column)
+			return token.New(token.STAR, "*", "", l.line, l.column), nil
 		case '=':
 			if l.peek() == '=' {
 				l.advance()
-				return token.New(token.EQ, "==", "", l.line, l.column)
+				return token.New(token.EQ, "==", "", l.line, l.column), nil
 			}
-			return token.New(token.ASSIGN, "=", "", l.line, l.column)
+			return token.New(token.ASSIGN, "=", "", l.line, l.column), nil
 		case '!':
 			if l.peek() == '=' {
 				l.advance()
-				return token.New(token.NE, "!=", "", l.line, l.column)
+				return token.New(token.NE, "!=", "", l.line, l.column), nil
 			}
-			return token.New(token.NOT, "!", "", l.line, l.column)
+			return token.New(token.NOT, "!", "", l.line, l.column), nil
 			
 		case '>':
 			if l.peek() == '=' {
 				l.advance()
-				return token.New(token.GE, ">=", "", l.line, l.column)
+				return token.New(token.GE, ">=", "", l.line, l.column), nil
 			}
-			return token.New(token.GT, ">", "", l.line, l.column)
+			return token.New(token.GT, ">", "", l.line, l.column), nil
 		case '<':
 			if l.peek() == '=' {
 				l.advance()
-				return token.New(token.LE, "<=", "", l.line, l.column)
+				return token.New(token.LE, "<=", "", l.line, l.column), nil
 			}
-			return token.New(token.LT, "<", "", l.line, l.column)
+			return token.New(token.LT, "<", "", l.line, l.column), nil
 		default:
-			return token.New(token.ERROR, string(ch), "", l.line, l.column)	
+			return token.New(token.ERROR, string(ch), "", l.line, l.column), fmt.Errorf("[line %v] Error: Unexpected character: %s\n", l.line, string(ch))
 	}
 }

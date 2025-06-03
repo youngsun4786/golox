@@ -7,7 +7,6 @@ import (
 	"github.com/codecrafters-io/interpreter-starter-go/token"
 )
 
-
 func main() {
 	if len(os.Args) < 3 {
 		fmt.Fprintln(os.Stderr, "Usage: ./your_program.sh tokenize <filename>")
@@ -35,9 +34,9 @@ func main() {
 	l := lexer.New(fileContents, filename)
 	hasLexicalErrors := false
 	for { 
-		tok := l.NextToken()
-		if tok.Type == token.ERROR {
-			fmt.Fprintf(os.Stderr, "[line %v] Error: Unexpected character: %s\n", tok.Position.Line, tok.Lexeme)
+		tok, err := l.NextToken()
+		if err != nil {
+			fmt.Fprintf(os.Stderr, "%s", err.Error())
 			hasLexicalErrors = true
 			continue
 		}
