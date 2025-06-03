@@ -34,7 +34,7 @@ func main() {
 	fileContents := string(rawFileContents)
 	l := lexer.New(fileContents, filename)
 	hasLexicalErrors := false
-	for !l.IsAtEnd() { 
+	for { 
 		tok := l.NextToken()
 		if tok.Type == token.ERROR {
 			fmt.Fprintf(os.Stderr, "[line %v] Error: Unexpected character: %s\n", tok.Position.Line, tok.Lexeme)
@@ -42,6 +42,9 @@ func main() {
 			continue
 		}
 		fmt.Println(tok.String())
+		if tok.Type == token.EOF {
+			break
+		}
 	}
 	if hasLexicalErrors {
 		os.Exit(65)
