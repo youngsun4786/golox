@@ -154,7 +154,7 @@ func (t*Token) TokenToStr() string {
 		case EOF:
 			return "EOF"	
 		default:
-			return ""
+			return string(t.Type)
 	}
 }
 
