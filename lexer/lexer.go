@@ -67,7 +67,7 @@ func (l* Lexer) tokenizeString() token.Token {
 
 	if l.IsAtEnd() {
 		fmt.Fprintf(os.Stderr, "[line %v] Error: Unterminated string.\n", l.line)
-		return token.New(token.EOF, "", "", l.line, l.column)
+		return l.NextToken()
 	}
 
 	l.advance()
