@@ -136,7 +136,7 @@ func (t* Token) String() string {
 
 	    // Handle float64 specially to preserve precision
 	if f, ok := t.Literal.(float64); ok {
-		return fmt.Sprintf("%s %s %s", t.Type, t.Lexeme, formatFloat(f))		
+		return fmt.Sprintf("%s %s %s", t.TokenToStr(), t.Lexeme, formatFloat(f))		
 	}
 
 	return fmt.Sprintf("%s %s %v", t.TokenToStr(), t.Lexeme, t.Literal)
